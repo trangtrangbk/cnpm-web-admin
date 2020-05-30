@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { Router } from "react-router-dom";
 
-function App() {
+import { ThemeProvider } from "@material-ui/styles";
+import Routes from "./Routes";
+import history from "./history";
+import { Box, Typography, Link } from "@material-ui/core";
+
+function Copyright() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Typography variant="body2" color="textSecondary" align="center">
+      {"Copyright © "}
+      <Link color="inherit" href="https://material-ui.com/">
+        F-Room
+      </Link>{" "}
+      {new Date().getFullYear()}
+      {"."}
+    </Typography>
   );
 }
+export default class App extends Component {
+  render() {
+    return (
+      //   <ThemeProvider>
+      <>
+        <Router history={history}>
+          <Routes />
+        </Router>
 
-export default App;
+        <Box mt={8}>
+          <Copyright />
+        </Box>
+      </>
+      //   </ThemeProvider>
+    );
+  }
+}
