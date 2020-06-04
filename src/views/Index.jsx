@@ -1,25 +1,32 @@
 import React from "react";
-import PropTypes from "prop-types";
 import AppBar from "@material-ui/core/AppBar";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Divider from "@material-ui/core/Divider";
 import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import IconButton from "@material-ui/core/IconButton";
-import InboxIcon from "@material-ui/icons/MoveToInbox";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import MailIcon from "@material-ui/icons/Mail";
 import MenuIcon from "@material-ui/icons/Menu";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Redirect, Route, Switch, NavLink } from "react-router-dom";
 import Dashboard from "./dashboard/Daskboard";
+import Account from "./profile"
+import UserList from "./users/UserList"
 import News from "./news/News";
-import { Button } from "@material-ui/core";
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
+import WebAssetIcon from '@material-ui/icons/WebAsset';
+import GavelIcon from '@material-ui/icons/Gavel';
+import Avatar from '@material-ui/core/Avatar';
+import history from "../history";
+import "../assets/index.css";
+import InputIcon from '@material-ui/icons/Input';
 
 const drawerWidth = 240;
 
@@ -46,7 +53,6 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   // necessary for content to be below app bar
-  toolbar: theme.mixins.toolbar,
   drawerPaper: {
     width: drawerWidth,
   },
@@ -61,16 +67,13 @@ const switchRoutes = (
     <Redirect exact from="/" to="/dashboard" />
     <Redirect exact from="/login" to="/dashboard" />
     <Route component={Dashboard} exact path="/dashboard" />
+    <Route component={News} exact path="/news" />
     <Route
-    component={News}
-    exact
-    path="/news"
-  />
-    {/* <Route
     component={UserList}
     exact
     path="/users"
   />
+  {/*
   <Route
     component={AddUser}
     exact
@@ -80,13 +83,13 @@ const switchRoutes = (
     component={EditUser}
     exact
     path="/editUser/:id"
-  />
+  />*/}
   <Route
     component={Account}
     exact
-    path="/account"
-  /> */}
-    <Redirect from="/" to="/not-found" />
+    path="/profile"
+  />
+    {/* <Redirect from="/" to="/not-found" /> */}
   </Switch>
 );
 function Index(props) {
@@ -101,53 +104,59 @@ function Index(props) {
 
   const drawer = (
     <div>
-      <div className={classes.toolbar} />
+      <div className="sidebar_profile" onClick ={()=>history.push('/profile')} >
+      <div className="center">
+      <Avatar alt="Remy Sharp" src="avatar.png" style={{width : "70px", height : "70px"}}/>
+      </div>
+      <div style={{textAlign: "center"}}>Administrator</div>
+      </div>
       <Divider />
       <List>
-        <NavLink to="/dashboard">
-          <ListItem button key="dashboard">
+        <ListItem button key="dashboard" style={{padding : "0px"}}>
+          <NavLink to="/dashboard" className="sidebar_item">
             <ListItemIcon>
-              <MailIcon />
+              <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
-          </ListItem>
-        </NavLink>
+          </NavLink>
+        </ListItem>
 
-        <NavLink to="/news">
-          <ListItem button key="news">
+        <ListItem button key="news"  style={{padding : "0px"}}>
+          <NavLink to="/news" className="sidebar_item">
             <ListItemIcon>
-              <MailIcon />
+              <WebAssetIcon />
             </ListItemIcon>
             <ListItemText primary="News" />
-          </ListItem>
-        </NavLink>
+          </NavLink>
+        </ListItem>
 
-        <NavLink to="/users">
-          <ListItem button key="users">
+        <ListItem button key="user"  style={{padding : "0px"}}>
+          <NavLink to="/users" className="sidebar_item">
             <ListItemIcon>
-              <MailIcon />
+              <SupervisorAccountIcon />
             </ListItemIcon>
-            <ListItemText primary="Users" />
-          </ListItem>
-        </NavLink>
+            <ListItemText primary="User" />
+          </NavLink>
+        </ListItem>
 
-        <NavLink to="/admins">
-          <ListItem button key="admins">
+        <ListItem button key="admin"  style={{padding : "0px"}}>
+          <NavLink to="/admins" className="sidebar_item">
             <ListItemIcon>
-              <MailIcon />
+              <SupervisedUserCircleIcon />
             </ListItemIcon>
-            <ListItemText primary="Admins" />
-          </ListItem>
-        </NavLink>
+            <ListItemText primary="Admin" />
+          </NavLink>
+        </ListItem>
 
-        <NavLink to="/roles">
-          <ListItem button key="roles">
+        <ListItem button key="role"  style={{padding : "0px"}}>
+          <NavLink to="/roles" className="sidebar_item">
             <ListItemIcon>
-              <MailIcon />
+              <GavelIcon />
             </ListItemIcon>
-            <ListItemText primary="Roles" />
-          </ListItem>
-        </NavLink>
+            <ListItemText primary="Role" />
+          </NavLink>
+        </ListItem>
+
       </List>
     </div>
   );
@@ -172,7 +181,12 @@ function Index(props) {
           <Typography variant="h6" noWrap>
             Welcome, Admin
           </Typography>
-          <Button>Logout</Button>
+          <IconButton
+            className={classes.signOutButton}
+            color="inherit"
+          >
+            <InputIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
