@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-
+import {openModal} from "../../../../../redux/actions/index";
 import { SearchInput } from '../../../../../components';
-
+import * as types from "../../../../../redux/constants";
+import { useDispatch } from 'react-redux';
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop : theme.spacing(6)
@@ -34,6 +35,7 @@ const UsersToolbar = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   return (
     <div

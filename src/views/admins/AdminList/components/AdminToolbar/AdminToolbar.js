@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-
+import { useSelector, useDispatch } from "react-redux";
 import { SearchInput } from '../../../../../components';
+import { openModal } from "../../../../../redux/actions/index";
+import * as types from "../../../../../redux/constants";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 
 const AdminToolbar = props => {
   const { className, ...rest } = props;
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
@@ -45,6 +48,7 @@ const AdminToolbar = props => {
         <Button
           color="primary"
           variant="contained"
+          onClick = {()=>dispatch(openModal(types.OPEN_MODAL_ADD_ADMIN))}
         >
           Add
         </Button>

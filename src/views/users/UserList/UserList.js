@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core';
-
+import * as types from "../../../redux/constants";
 import { UsersToolbar, UsersTable } from './components';
 import mockData from './data';
+import { useDispatch, useSelector } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({
   root: {

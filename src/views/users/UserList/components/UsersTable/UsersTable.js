@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/core';
-import AddUserModal from "../../../UserModal/AddUserModal"
 import {
   Card,
   CardActions,
@@ -50,7 +49,6 @@ const UsersTable = props => {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-  const [openModal, setOpenModal] = useState(false);
   const handleSelectAll = event => {
     const { users } = props;
 
@@ -92,18 +90,11 @@ const UsersTable = props => {
   const handleRowsPerPageChange = event => {
     setRowsPerPage(event.target.value);
   };
-  const toggleModal = () =>{
-    setOpenModal(!openModal)
-  }
   return (
     <Card
       {...rest}
       className={clsx(classes.root, className)}
     >
-       <AddUserModal
-          handleClose={toggleModal}
-          status={openModal}
-        />
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
@@ -144,7 +135,7 @@ const UsersTable = props => {
                         value="true"
                       />
                     </TableCell>
-                    <TableCell onClick={toggleModal}>
+                    <TableCell>
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
