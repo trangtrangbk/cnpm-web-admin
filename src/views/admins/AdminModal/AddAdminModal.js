@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Modal, FormGroup, Button, Input } from "@material-ui/core";
-import "./usermodal.css"
+import "./adminmodal.css"
 function AddUserModal({ handleClose, status }) {
   const referLink = window.location.href;
   console.log("modal");

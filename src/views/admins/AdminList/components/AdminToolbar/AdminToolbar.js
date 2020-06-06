@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersToolbar = props => {
+const AdminToolbar = props => {
   const { className, ...rest } = props;
 
   const classes = useStyles();
@@ -41,17 +41,26 @@ const UsersToolbar = props => {
       className={clsx(classes.root, className)}
     >
       <div className={classes.row}>
+        <span className={classes.spacer} />
+        <Button
+          color="primary"
+          variant="contained"
+        >
+          Add
+        </Button>
+      </div>
+      <div className={classes.row}>
         <SearchInput
           className={classes.searchInput}
-          placeholder="Search user"
+          placeholder="Search admin"
         />
       </div>
     </div>
   );
 };
 
-UsersToolbar.propTypes = {
+AdminToolbar.propTypes = {
   className: PropTypes.string
 };
 
-export default UsersToolbar;
+export default AdminToolbar;

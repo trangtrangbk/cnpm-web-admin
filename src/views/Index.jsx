@@ -15,18 +15,19 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { Redirect, Route, Switch, NavLink } from "react-router-dom";
 import Dashboard from "./dashboard/Daskboard";
-import Account from "./profile"
-import UserList from "./users/UserList"
+import Account from "./profile";
+import UserList from "./users/UserList";
 import News from "./news/News";
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import SupervisedUserCircleIcon from '@material-ui/icons/SupervisedUserCircle';
-import WebAssetIcon from '@material-ui/icons/WebAsset';
-import GavelIcon from '@material-ui/icons/Gavel';
-import Avatar from '@material-ui/core/Avatar';
+import AdminList from "./admins/AdminList"
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
+import SupervisedUserCircleIcon from "@material-ui/icons/SupervisedUserCircle";
+import WebAssetIcon from "@material-ui/icons/WebAsset";
+import GavelIcon from "@material-ui/icons/Gavel";
+import Avatar from "@material-ui/core/Avatar";
 import history from "../history";
 import "../assets/index.css";
-import InputIcon from '@material-ui/icons/Input';
+import InputIcon from "@material-ui/icons/Input";
 
 const drawerWidth = 240;
 
@@ -68,27 +69,9 @@ const switchRoutes = (
     <Redirect exact from="/login" to="/dashboard" />
     <Route component={Dashboard} exact path="/dashboard" />
     <Route component={News} exact path="/news" />
-    <Route
-    component={UserList}
-    exact
-    path="/users"
-  />
-  {/*
-  <Route
-    component={AddUser}
-    exact
-    path="/addUser"
-  />
-  <Route
-    component={EditUser}
-    exact
-    path="/editUser/:id"
-  />*/}
-  <Route
-    component={Account}
-    exact
-    path="/profile"
-  />
+    <Route component={UserList} exact path="/users" />
+    <Route component={AdminList} exact path="/admins" />
+    <Route component={Account} exact path="/profile" />
     {/* <Redirect from="/" to="/not-found" /> */}
   </Switch>
 );
@@ -104,15 +87,19 @@ function Index(props) {
 
   const drawer = (
     <div>
-      <div className="sidebar_profile" onClick ={()=>history.push('/profile')} >
-      <div className="center">
-      <Avatar alt="Remy Sharp" src="avatar.png" style={{width : "70px", height : "70px"}}/>
-      </div>
-      <div style={{textAlign: "center"}}>Administrator</div>
+      <div className="sidebar_profile" onClick={() => history.push("/profile")}>
+        <div className="center">
+          <Avatar
+            alt="Remy Sharp"
+            src="avatar.png"
+            style={{ width: "70px", height: "70px" }}
+          />
+        </div>
+        <div style={{ textAlign: "center" }}>Administrator</div>
       </div>
       <Divider />
       <List>
-        <ListItem button key="dashboard" style={{padding : "0px"}}>
+        <ListItem button key="dashboard" style={{ padding: "0px" }}>
           <NavLink to="/dashboard" className="sidebar_item">
             <ListItemIcon>
               <DashboardIcon />
@@ -121,7 +108,7 @@ function Index(props) {
           </NavLink>
         </ListItem>
 
-        <ListItem button key="news"  style={{padding : "0px"}}>
+        <ListItem button key="news" style={{ padding: "0px" }}>
           <NavLink to="/news" className="sidebar_item">
             <ListItemIcon>
               <WebAssetIcon />
@@ -130,7 +117,7 @@ function Index(props) {
           </NavLink>
         </ListItem>
 
-        <ListItem button key="user"  style={{padding : "0px"}}>
+        <ListItem button key="user" style={{ padding: "0px" }}>
           <NavLink to="/users" className="sidebar_item">
             <ListItemIcon>
               <SupervisorAccountIcon />
@@ -139,7 +126,7 @@ function Index(props) {
           </NavLink>
         </ListItem>
 
-        <ListItem button key="admin"  style={{padding : "0px"}}>
+        <ListItem button key="admin" style={{ padding: "0px" }}>
           <NavLink to="/admins" className="sidebar_item">
             <ListItemIcon>
               <SupervisedUserCircleIcon />
@@ -148,7 +135,7 @@ function Index(props) {
           </NavLink>
         </ListItem>
 
-        <ListItem button key="role"  style={{padding : "0px"}}>
+        <ListItem button key="role" style={{ padding: "0px" }}>
           <NavLink to="/roles" className="sidebar_item">
             <ListItemIcon>
               <GavelIcon />
@@ -156,7 +143,6 @@ function Index(props) {
             <ListItemText primary="Role" />
           </NavLink>
         </ListItem>
-
       </List>
     </div>
   );
@@ -181,10 +167,7 @@ function Index(props) {
           <Typography variant="h6" noWrap>
             Welcome, Admin
           </Typography>
-          <IconButton
-            className={classes.signOutButton}
-            color="inherit"
-          >
+          <IconButton className={classes.signOutButton} color="inherit">
             <InputIcon />
           </IconButton>
         </Toolbar>

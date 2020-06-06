@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import { makeStyles } from '@material-ui/core';
-import AddUserModal from "../../../UserModal/AddUserModal"
+import AddUserModal from "../../../AdminModal/AddAdminModal"
 import {
   Card,
   CardActions,
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UsersTable = props => {
+const AdminTable = props => {
   const { className, users, ...rest } = props;
 
   const classes = useStyles();
@@ -186,9 +186,9 @@ const UsersTable = props => {
   );
 };
 
-UsersTable.propTypes = {
+AdminTable.propTypes = {
   className: PropTypes.string,
   users: PropTypes.array.isRequired
 };
 
-export default UsersTable;
+export default AdminTable;
