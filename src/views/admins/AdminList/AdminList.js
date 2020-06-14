@@ -26,13 +26,24 @@ const AdminList = () => {
     request().get("/admin/accounts/listAdmin").then(
       res =>{
         console.log(res)
-        setListAdmins(res.data.data)
+        setListAdmins(res.data)
       }
     )
   }
+  const permissions = useSelector(store => store.permission.permissions)
+
   useEffect(()=>{
     fetchListAdmins();
+    if(permissions.length <=0){
+      request().get("/permission").then(
+          res =>{
+            console.log(res)
+            dispatch({type : types.SET_ROLES, payloads : res.data})
+          }
+        )
+  }
   },[])
+
   return (
     <div className={classes.root}>
         <AddAdminModal
@@ -41,7 +52,7 @@ const AdminList = () => {
         />
       <AdminToolbar />
       <div className={classes.content}>
-        <AdminTable admins={listAdmins} fetchList = {()=>fetchListAdmins()} />
+        <AdminTable admins={listAdmins} fetchList = {()=>fetchListAdmins()} permissions ={permissions}/>
       </div>
     </div>
   );

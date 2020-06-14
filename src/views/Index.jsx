@@ -17,6 +17,7 @@ import { Redirect, Route, Switch, NavLink } from "react-router-dom";
 import Dashboard from "./dashboard/Daskboard";
 import Account from "./profile";
 import UserList from "./users/UserList";
+import Permissons from './permissions/PermissionList';
 import News from "./news/NewsList";
 import AdminList from "./admins/AdminList"
 import DashboardIcon from "@material-ui/icons/Dashboard";
@@ -72,6 +73,7 @@ const switchRoutes = (
     <Route component={UserList} exact path="/users" />
     <Route component={AdminList} exact path="/admins" />
     <Route component={Account} exact path="/profile" />
+    <Route component={Permissons} exact path="/roles" />
     {/* <Redirect from="/" to="/not-found" /> */}
   </Switch>
 );

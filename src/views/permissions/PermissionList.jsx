@@ -1,40 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core';
-import * as types from "../../../redux/constants";
-import { useDispatch, useSelector } from 'react-redux';
-import request from "../../../request";
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    padding: theme.spacing(3)
-  },
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { makeStyles } from "@material-ui/core";
+import * as types from "../../redux/constants"
+import {
+  Card,
+  CardContent,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@material-ui/core";
+import request from "../../request";
+import "../../assets/index.css";
+import { useSelector, useDispatch } from "react-redux";
+const useStyles = makeStyles((theme) => ({
+  root: {},
   content: {
-    marginTop: theme.spacing(2)
-  }
+    padding: 0,
+  },
+  inner: {
+    minWidth: 1050,
+  },
+  nameContainer: {
+    display: "flex",
+    alignItems: "center",
+  },
+  avatar: {
+    marginRight: theme.spacing(2),
+  },
+  actions: {
+    justifyContent: "flex-end",
+  },
 }));
 
-const PermissionList = () => {
+const NewsTable = () => {
   const classes = useStyles();
-  const dispatch = useDispatch();
-  const [permissons,setPermissons] = useState([]);
-  const fetchPermissons = ()=>{
-    request().get("/permisson").then(
-      res =>{
-        console.log(res)
-        setPermissons(res.data)
-      }
-    )
-  }
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [page, setPage] = useState(0);
+const dispatch = useDispatch()
+  const handlePageChange = (event, page) => {
+    setPage(page);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(event.target.value);
+  };
+
+  const permissions = useSelector(store => store.permission.permissions)
+  console.log(permissions)
   useEffect(()=>{
-    fetchPermissons();
+    if(permissions.length <=0){
+        request().get("/permission").then(
+            res =>{
+              console.log(res)
+              dispatch({type : types.SET_ROLES, payloads : res.data})
+            }
+          )
+    }
   },[])
   return (
-    <div className={classes.root}>
-      {permissons.map(permisson=>(
-          <p>{permisson.name}</p>
-      ))}
-    </div>
+    <Card style = {{margin: "100px auto", width : "fit-content"}}>
+      <CardContent className={classes.content}>
+        <PerfectScrollbar>
+          <div className={classes.inner}>
+           {permissions.length > 0?<>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Code</TableCell>
+                  <TableCell>Tên</TableCell>
+                  <TableCell>Mô tả</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {permissions.slice(0, rowsPerPage).map((permission) => (
+                  <TableRow className={classes.tableRow} hover key={permission._id}>
+                    <TableCell>{permission.code}</TableCell>
+
+                    <TableCell>
+                        <span className = "permission">{permission.name}</span>
+                    </TableCell>
+                    <TableCell>{permission.description}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+           </> : null}
+          </div>
+        </PerfectScrollbar>
+      </CardContent>
+    </Card>
   );
 };
 
-export default PermissionList;
+NewsTable.propTypes = {
+  className: PropTypes.string,
+  listNews: PropTypes.array.isRequired,
+};
+
+export default NewsTable;

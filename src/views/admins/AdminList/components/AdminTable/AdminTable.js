@@ -1,49 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import clsx from 'clsx';
-import PropTypes from 'prop-types';
-import moment from 'moment';
-import PerfectScrollbar from 'react-perfect-scrollbar';
-import { makeStyles } from '@material-ui/core';
+import React, { useState, useEffect } from "react";
+import clsx from "clsx";
+import PropTypes from "prop-types";
+import moment from "moment";
+import PerfectScrollbar from "react-perfect-scrollbar";
+import { makeStyles } from "@material-ui/core";
 import {
   Card,
   CardActions,
   CardContent,
   Avatar,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
   Typography,
-  TablePagination
-} from '@material-ui/core';
+  TablePagination,
+} from "@material-ui/core";
 import displayIcon from "./correct.svg";
 import blockIcon from "./block.svg";
-import { getInitials } from '../../../../../helpers';
+import { getInitials } from "../../../../../helpers";
 import { useSelector, useDispatch } from "react-redux";
+import request from "../../../../../request";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {},
   content: {
-    padding: 0
+    padding: 0,
   },
   inner: {
-    minWidth: 1050
+    minWidth: 1050,
   },
   nameContainer: {
-    display: 'flex',
-    alignItems: 'center'
+    display: "flex",
+    alignItems: "center",
   },
   avatar: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   actions: {
-    justifyContent: 'flex-end'
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
-const AdminTable = props => {
+const AdminTable = (props) => {
   const { className, admins, ...rest } = props;
 
   const classes = useStyles();
@@ -55,7 +55,7 @@ const AdminTable = props => {
     setPage(page);
   };
 
-  const handleRowsPerPageChange = event => {
+  const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
   };
   const handleChangeStatus = (admin) => {
@@ -64,13 +64,18 @@ const AdminTable = props => {
     //   .then((res) => {
     //     props.fetchList();
     //   });
-    alert("changed status")
+    alert("changed status");
+  };
+  const permissions = useSelector((store) => store.permission.permissions);
+  const getPermissionName = (code) => {
+    console.log(permissions);
+    const permission =
+      permissions.find((permission) => permission.code == code) || [];
+    console.log(permission);
+    return permission.name;
   };
   return (
-    <Card
-      {...rest}
-      className={clsx(classes.root, className)}
-    >
+    <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
         <PerfectScrollbar>
           <div className={classes.inner}>
@@ -85,26 +90,30 @@ const AdminTable = props => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {admins.slice(0, rowsPerPage).map(admin => (
-                  <TableRow
-                    className={classes.tableRow}
-                    hover
-                    key={admin._id}
-                  >
-                    <TableCell >
+                {admins.slice(0, rowsPerPage).map((admin) => (
+                  <TableRow className={classes.tableRow} hover key={admin._id}>
+                    <TableCell>
                       <div className={classes.nameContainer}>
-                        {/* <Avatar
+                        <Avatar
                           className={classes.avatar}
-                          src={user.avatarUrl}
+                          src={admin.avatarUrl}
                         >
-                          {getInitials(user.name)}
-                        </Avatar> */}
-                        <Typography variant="body1">{admin.username}</Typography>
+                          {getInitials(admin.username)}
+                        </Avatar>
+                        <Typography variant="body1">
+                          {admin.username}
+                        </Typography>
                       </div>
                     </TableCell>
                     <TableCell>{admin.email}</TableCell>
-                      <TableCell>{admin.role}</TableCell>
-                      <TableCell onClick={() => handleChangeStatus(admin)}>
+                    <TableCell style ={{width : "30%"}}>
+                      {admin.role.map((r) => (
+                        <span className="permission">
+                          {getPermissionName(r)}
+                        </span>
+                      ))}
+                    </TableCell>
+                    <TableCell onClick={() => handleChangeStatus(admin)}>
                       {admin.status ? (
                         <img src={displayIcon} width="20px" height="20px" />
                       ) : (
@@ -112,7 +121,7 @@ const AdminTable = props => {
                       )}
                     </TableCell>
                     <TableCell>
-                      {moment(admin.createdDay).format('DD/MM/YYYY hh:mm:ss')}
+                      {moment(admin.createdDay).format("DD/MM/YYYY hh:mm:ss")}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -138,7 +147,7 @@ const AdminTable = props => {
 
 AdminTable.propTypes = {
   className: PropTypes.string,
-  users: PropTypes.array.isRequired
+  users: PropTypes.array.isRequired,
 };
 
 export default AdminTable;

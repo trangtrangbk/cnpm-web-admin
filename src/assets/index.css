@@ -44,3 +44,11 @@
   display: flex;
   justify-content: center;
 }
+.permission {
+  background: #6da72bba;
+  color: #fff;
+  border-radius: 5px;
+  padding: 7px;
+  border: 1px solid #5da707;
+  margin : 5px;
+}
