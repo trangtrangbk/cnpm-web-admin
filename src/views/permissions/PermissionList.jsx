@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 import * as types from "../../../redux/constants";
-import { UsersToolbar, UsersTable } from './components';
 import { useDispatch, useSelector } from 'react-redux';
 import request from "../../../request";
 
@@ -14,29 +13,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const UserList = () => {
+const PermissionList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const [listUsers,setListUsers] = useState([]);
-  const fetchListUsers = ()=>{
-    request().get("/admin/accounts").then(
+  const [permissons,setPermissons] = useState([]);
+  const fetchPermissons = ()=>{
+    request().get("/permisson").then(
       res =>{
         console.log(res)
-        setListUsers(res.data)
+        setPermissons(res.data)
       }
     )
   }
   useEffect(()=>{
-    fetchListUsers();
+    fetchPermissons();
   },[])
   return (
     <div className={classes.root}>
-      <UsersToolbar />
-      <div className={classes.content}>
-        <UsersTable users={listUsers} fetchList = {()=>fetchListUsers()}/>
-      </div>
+      {permissons.map(permisson=>(
+          <p>{permisson.name}</p>
+      ))}
     </div>
   );
 };
 
-export default UserList;
+export default PermissionList;

@@ -1,8 +1,14 @@
 import React, { useEffect } from "react";
-import { Modal } from "@material-ui/core";
+import { Modal, TextField } from "@material-ui/core";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import "../../../assets/modal.css";
 
-import "./adminmodal.css"
 function AddUserModal({ handleClose, status }) {
+  const top100Films = [
+    { title: 'The Shawshank Redemption', year: 1994 },
+    { title: 'The Godfather', year: 1972 },
+    { title: 'The Godfather: Part II', year: 1974 },
+    { title: 'The Dark Knight', year: 2008 }]
   return (
     <Modal
       open={status}
@@ -13,18 +19,51 @@ function AddUserModal({ handleClose, status }) {
       <div className="modal-dialog" role="document">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Modal title</h5>
+            <h5 className="modal-title">Add New Admin</h5>
             <button
               type="button"
               className="close"
               data-dismiss="modal"
               aria-label="Close"
             >
-              <span aria-hidden="true" onClick={handleClose}>&times;</span>
+              <span aria-hidden="true" onClick={handleClose}>
+                &times;
+              </span>
             </button>
           </div>
           <div className="modal-body">
-            <p>Modal body text goes here.</p>
+            <form noValidate autoComplete="off">
+              <TextField
+                id="outlined-basic"
+                label="usename"
+                variant="outlined"
+                fullWidth
+                margin="dense"
+              />
+              <TextField
+                id="outlined-basic"
+                label="email"
+                variant="outlined"
+                fullWidth
+                margin="dense"
+              />
+              <Autocomplete
+                style={{margin : "15px 0px"}}
+                multiple
+                id="tags-outlined"
+                options={top100Films}
+                getOptionLabel={(option) => option.title}
+                filterSelectedOptions
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Role"
+                    placeholder="Favorites"
+                  />
+                )}
+              />
+            </form>
           </div>
           <div className="modal-footer">
             <button type="button" className="btn btn-primary">
@@ -34,7 +73,7 @@ function AddUserModal({ handleClose, status }) {
               type="button"
               className="btn btn-secondary"
               data-dismiss="modal"
-              onClick = {handleClose}
+              onClick={handleClose}
             >
               Cancel
             </button>

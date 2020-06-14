@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect } from 'react';
-import {Avatar, Button, CssBaseline, TextField, FormControlLabel, Checkbox, Link, Grid,
+import {Avatar, Button, CssBaseline, TextField, Link, Grid,
     Typography, makeStyles, Container} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Axios from 'axios';
-
+import request from "../../../request";
+import history from "../../../history";
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -36,18 +36,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignIn() {
 
-  // useEffect(()=>{
-  //   Axios.post("http://localhost:3001/api/login",
-  //   {
-  //     username : "asas",
-  //     password : "asas"
-  //   }
-  // )
-  // },[])
   const classes = useStyles();
   const initState = {
       email : "",
-      password : ""
+      password : "",
+      err : ""
   }
   const [state, setState] = useReducer(
     (prestate, newState) => ({ ...prestate, ...newState }),initState
@@ -55,6 +48,18 @@ export default function SignIn() {
   const logInHandler = (e)=>{
     e.preventDefault();
     console.log(state)
+    request().post("/login",
+    {
+      email : state.email,
+      password : state.password
+    }
+  ).then(res=>{
+    localStorage.setItem("token", res.data.token)
+    window.location.href = "/dashboard"
+  }).catch(err =>{
+    console.log(err)
+    setState({...state, err : "Email hoặc password không đúng!"})
+  })
   }
   const onChangeHandler = (e)=>{
       setState({[e.target.name] : e.target.value})
@@ -69,6 +74,7 @@ export default function SignIn() {
         <Typography component="h1" variant="h5">
             F-ROOM
         </Typography>
+        <span style = {{color : "red"}}> {state.err}</span>
         <form className={classes.form} onSubmit={logInHandler} >
           <TextField
             variant="outlined"

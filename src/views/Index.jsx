@@ -17,7 +17,7 @@ import { Redirect, Route, Switch, NavLink } from "react-router-dom";
 import Dashboard from "./dashboard/Daskboard";
 import Account from "./profile";
 import UserList from "./users/UserList";
-import News from "./news/News";
+import News from "./news/NewsList";
 import AdminList from "./admins/AdminList"
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import SupervisorAccountIcon from "@material-ui/icons/SupervisorAccount";
@@ -140,7 +140,7 @@ function Index(props) {
             <ListItemIcon>
               <GavelIcon />
             </ListItemIcon>
-            <ListItemText primary="Role" />
+            <ListItemText primary="Permissons" />
           </NavLink>
         </ListItem>
       </List>

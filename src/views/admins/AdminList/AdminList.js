@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core';
 
 import { AdminToolbar, AdminTable } from './components';
-import mockData from './data';
 import AddAdminModal from "../AdminModal/AddAdminModal"
 import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "../../../redux/actions/index";
 import * as types from "../../../redux/constants";
+import request from "../../../request";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,10 +20,19 @@ const useStyles = makeStyles(theme => ({
 const AdminList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-
-  const [users] = useState(mockData);
-  const isOpenAddAdminModal = useSelector(store => store.addAdmin);
-
+  const isOpenAddAdminModal = useSelector(store => store.modal.addAdmin);
+  const [listAdmins,setListAdmins] = useState([]);
+  const fetchListAdmins = ()=>{
+    request().get("/admin/accounts/listAdmin").then(
+      res =>{
+        console.log(res)
+        setListAdmins(res.data.data)
+      }
+    )
+  }
+  useEffect(()=>{
+    fetchListAdmins();
+  },[])
   return (
     <div className={classes.root}>
         <AddAdminModal
@@ -32,7 +41,7 @@ const AdminList = () => {
         />
       <AdminToolbar />
       <div className={classes.content}>
-        <AdminTable users={users} />
+        <AdminTable admins={listAdmins} fetchList = {()=>fetchListAdmins()} />
       </div>
     </div>
   );
