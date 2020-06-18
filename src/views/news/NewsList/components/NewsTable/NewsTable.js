@@ -11,7 +11,6 @@ import {
   CardActions,
   CardContent,
   Avatar,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
