@@ -1,12 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, MenuItem } from "@material-ui/core";
 import PeopleIcon from "@material-ui/icons/PeopleOutlined";
-import { Card, CardContent, Grid, Typography, Avatar } from "@material-ui/core";
+import { Card, CardContent, Grid, Typography, Avatar,FormControl, InputLabel, Select } from "@material-ui/core";
 import request from "../../request";
 import DataChart from "react-apexcharts";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     paddingTop: theme.spacing(12),
+  },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
   },
   content: {
     alignItems: "center",
@@ -43,8 +48,8 @@ const Dashboard = () => {
 
   const [totalData, setTotalData] = useState([]);
   const [chartData, setChartData] = useState([]);
-  const [year, setYear] = useState(new Date().getFullYear())
-  console.log()
+  const [year, setYear] = useState(new Date().getFullYear());
+  console.log();
   const option = {
     chart: {
       id: "basic-bar",
@@ -72,7 +77,10 @@ const Dashboard = () => {
   const series = [
     {
       name: "series-1",
-      data: chartData.length>0?chartData.filter(chart =>chart.year== year)[0].data:[0,0,0,0,0,0,0,0,0,0,0,0] ,
+      data:
+        chartData.length > 0
+          ? chartData.filter((chart) => chart.year == year)[0].data
+          : [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
   ];
 
@@ -162,8 +170,29 @@ const Dashboard = () => {
           </Card>
         </Grid>
       </Grid>
-
-      <DataChart options={option} series={series} type="area" width="70%" />
+      <Grid container spacing={4}>
+      <Grid item lg={2} sm={2} xl={2} xs={2}>
+      <FormControl className={classes.formControl}>
+        <InputLabel id="demo-simple-select-label">Năm</InputLabel>
+        <Select
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
+          value={year}
+          onChange={(e)=>setYear(e.target.value)}
+        >
+          {
+            chartData.map(data =>
+              (
+              <MenuItem value={data.year}>{data.year}</MenuItem>
+              ))
+          }
+        </Select>
+      </FormControl>
+      </Grid>
+      <Grid item lg={9} sm={9} xl={9} xs={12}>
+      <DataChart options={option} series={series} type="area" width="80%" />
+      </Grid>
+      </Grid>
     </div>
   );
 };
