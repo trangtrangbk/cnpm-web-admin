@@ -98,10 +98,10 @@ const AdminTable = (props) => {
                           className={classes.avatar}
                           src={admin.avatarUrl}
                         >
-                          {getInitials(admin.username)}
+                          {getInitials(admin.name)}
                         </Avatar>
                         <Typography variant="body1">
-                          {admin.username}
+                          {admin.name}
                         </Typography>
                       </div>
                     </TableCell>

@@ -109,9 +109,9 @@ const NewsTable = (props) => {
                     <TableCell>
                       <div className={classes.nameContainer}>
                         <Avatar className={classes.avatar} src={news.avatarUrl}>
-                          {getInitials(news.user.username)}
+                          {getInitials(news.user.name)}
                         </Avatar>
-                        <Typography variant="body1">{news.user.username}</Typography>
+                        <Typography variant="body1">{news.user.name}</Typography>
                       </div>
                     </TableCell>
                     <TableCell onClick={() => handleChangeStatus(news)}>

@@ -52,7 +52,7 @@ const dispatch = useDispatch()
   console.log(permissions)
   useEffect(()=>{
     if(permissions.length <=0){
-        request().get("/permission").then(
+        request().get("/permissions").then(
             res =>{
               console.log(res)
               dispatch({type : types.SET_ROLES, payloads : res.data})

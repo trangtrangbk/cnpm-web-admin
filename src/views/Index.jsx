@@ -87,6 +87,11 @@ function Index(props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleSignOut = ()=>{
+    localStorage.clear();
+    window.location.href = "/login"
+  }
+
   const drawer = (
     <div>
       <div className="sidebar_profile" onClick={() => history.push("/profile")}>
@@ -169,7 +174,7 @@ function Index(props) {
           <Typography variant="h6" noWrap>
             Welcome, Admin
           </Typography>
-          <IconButton className={classes.signOutButton} color="inherit">
+          <IconButton className={classes.signOutButton} color="inherit" onClick={()=>handleSignOut()}>
             <InputIcon />
           </IconButton>
         </Toolbar>

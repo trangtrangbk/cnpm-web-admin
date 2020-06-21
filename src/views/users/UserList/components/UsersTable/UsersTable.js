@@ -100,9 +100,9 @@ const UsersTable = props => {
                           className={classes.avatar}
                           src={user.avatarUrl}
                         >
-                          {getInitials(user.username)}
+                          {getInitials(user.name)}
                         </Avatar>
-                        <Typography variant="body1">{user.username}</Typography>
+                        <Typography variant="body1">{user.name}</Typography>
                       </div>
                     </TableCell>
                     <TableCell>{user.email}</TableCell>

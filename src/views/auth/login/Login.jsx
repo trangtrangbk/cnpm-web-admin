@@ -48,7 +48,7 @@ export default function SignIn() {
   const logInHandler = (e)=>{
     e.preventDefault();
     console.log(state)
-    request().post("/login",
+    request().post("/loginAdmin",
     {
       email : state.email,
       password : state.password
