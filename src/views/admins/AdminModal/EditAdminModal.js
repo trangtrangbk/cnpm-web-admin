@@ -10,7 +10,13 @@ function EditAdminModal({ handleClose, status, roles }) {
   const admin = useSelector(store =>store.admin.selectedAdmin)
   const [defaultRole,setDefaultRole] = useState([]);
   useEffect(()=>{
-    setDefaultRole(roles.filter(rolex =>admin.role.includes(rolex.code)))
+    let deRole = [];
+    try {
+      deRole = roles.filter(rolex =>admin.role.includes(rolex.code))
+    } catch (error) {
+      deRole = []
+    }
+    setDefaultRole(deRole)
   },[admin])
   console.log(roles,admin,defaultRole)
   const handleEditAdmin = e=>{

@@ -114,7 +114,7 @@ const NewsTable = (props) => {
                         <Typography variant="body1">{news.user.name}</Typography>
                       </div>
                     </TableCell>
-                    <TableCell onClick={() => handleChangeStatus(news)}>
+                    <TableCell style={{cursor : "pointer"}} onClick={() => handleChangeStatus(news)}>
                       {news.status ? (
                         <img src={displayIcon} width="20px" height="20px" />
                       ) : (

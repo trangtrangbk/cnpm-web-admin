@@ -60,12 +60,11 @@ const AdminTable = (props) => {
     setRowsPerPage(event.target.value);
   };
   const handleChangeStatus = (admin) => {
-    // request()
-    //   .patch(`/admin/news/${news._id}`, { status: !news.status })
-    //   .then((res) => {
-    //     props.fetchList();
-    //   });
-    alert("changed status");
+    request()
+      .patch(`/admin/accounts/changestatusaccountuser/${admin._id}`, { status: !admin.status })
+      .then((res) => {
+        props.fetchList();
+      });
   };
   const permissions = useSelector((store) => store.permission.permissions);
   const getPermissionName = (code) => {

@@ -3,6 +3,7 @@ import { Modal } from "@material-ui/core";
 import "../../../assets/modal.css";
 import moment from "moment";
 import Carousel from "react-material-ui-carousel";
+import numeral from 'numeral'
 
 function AddUserModal({ handleClose, status, news }) {
   console.log(news);
@@ -16,11 +17,11 @@ function AddUserModal({ handleClose, status, news }) {
       <div
         className="modal-dialog"
         role="document"
-        style={{ maxWidth: "1000px" }}
+        style={{ maxWidth: "1000px",overflow : "auto", maxHeight : "900px" }}
       >
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">{news.title}</h5>
+            <h2 className="modal-title">{news.title}</h2>
             <button
               type="button"
               className="close"
@@ -34,11 +35,12 @@ function AddUserModal({ handleClose, status, news }) {
           </div>
           <div className="modal-body">
             <div className="new-info">
-              <span>
-                {moment(news.createDay).format("DD/MM/YYYY hh:mm:ss")}
-              </span>
+              <h3 style={{fontStyle : "italic"}}>
+              Ngày đăng:  {moment(news.createDay).format("DD/MM/YYYY hh:mm:ss")}
+              </h3>
               <br />
-              Người đăng: <span>{news.user && news.user.name}</span>
+             <h3 style={{fontStyle : "italic", marginBottom: "20px"}}>
+             Người đăng: {news.user && news.user.name}</h3>
               <Carousel>
                 {news.picture && news.picture.map((item) => (
                   <img src= {item} width = "900px"/>
@@ -48,13 +50,13 @@ function AddUserModal({ handleClose, status, news }) {
                 {news.description}
               </div>
               <div>
-                {news.area}
+                Diện tích: {news.area} (m2)
               </div>
               <div>
-                {news.price}
+                Giá phòng: {numeral(news.price).format('0,0')} vnd
               </div>
               <div>
-                {news.phone}
+                Liên hệ: {news.phone}
               </div>
             </div>
           </div>
