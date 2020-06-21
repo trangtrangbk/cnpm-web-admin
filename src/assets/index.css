@@ -45,6 +45,9 @@
   justify-content: center;
 }
 .permission {
+  display: list-item;
+  width: fit-content;
+  margin-bottom: 5px;
   background: #6da72bba;
   color: #fff;
   border-radius: 5px;

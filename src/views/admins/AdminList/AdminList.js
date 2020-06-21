@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { closeModal } from "../../../redux/actions/index";
 import * as types from "../../../redux/constants";
 import request from "../../../request";
+import EditAdminModal from '../AdminModal/EditAdminModal';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 const AdminList = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const isOpenAddAdminModal = useSelector(store => store.modal.addAdmin);
+  const {addAdmin, editAdmin} = useSelector(store => store.modal);
   const [listAdmins,setListAdmins] = useState([]);
   const fetchListAdmins = ()=>{
     request().get("/admin/accounts/listAdmin").then(
@@ -47,8 +48,14 @@ const AdminList = () => {
   return (
     <div className={classes.root}>
         <AddAdminModal
+          roles = {permissions}
           handleClose={()=>dispatch(closeModal(types.CLOSE_MODAL_ADD_ADMIN))}
-          status={isOpenAddAdminModal}
+          status={addAdmin}
+        />
+          <EditAdminModal
+          roles = {permissions}
+          handleClose={()=>dispatch(closeModal(types.CLOSE_MODAL_ADD_ADMIN))}
+          status={editAdmin}
         />
       <AdminToolbar />
       <div className={classes.content}>

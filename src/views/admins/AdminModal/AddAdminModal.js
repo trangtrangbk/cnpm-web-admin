@@ -1,14 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Modal, TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import "../../../assets/modal.css";
+import request from "../../../request";
 
-function AddUserModal({ handleClose, status }) {
-  const top100Films = [
-    { title: 'The Shawshank Redemption', year: 1994 },
-    { title: 'The Godfather', year: 1972 },
-    { title: 'The Godfather: Part II', year: 1974 },
-    { title: 'The Dark Knight', year: 2008 }]
+function AddAdminModal({ handleClose, status, roles }) {
+  const [username,setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [selectedRoles, setSelectedRoles] = useState([]);
+  const handleAddAdmin = e=>{
+    e.preventDefault();
+    request().post("/register",{
+      email,
+      password,
+      isAdmin : true,
+      name: username,
+      "role" : selectedRoles
+    })
+  }
+
+
   return (
     <Modal
       open={status}
@@ -32,13 +44,14 @@ function AddUserModal({ handleClose, status }) {
             </button>
           </div>
           <div className="modal-body">
-            <form noValidate autoComplete="off">
+            <form onSubmit={handleAddAdmin}>
               <TextField
                 id="outlined-basic"
                 label="usename"
                 variant="outlined"
                 fullWidth
                 margin="dense"
+                onChange = {e=>setUsername(e.target.value)}
               />
               <TextField
                 id="outlined-basic"
@@ -46,37 +59,48 @@ function AddUserModal({ handleClose, status }) {
                 variant="outlined"
                 fullWidth
                 margin="dense"
+                onChange = {e=>setEmail(e.target.value)}
+              />
+              <TextField
+                id="outlined-basic"
+                label="password"
+                type="password"
+                onChange = {e=>setPassword(e.target.value)}
+                variant="outlined"
+                fullWidth
+                margin="dense"
               />
               <Autocomplete
-                style={{margin : "15px 0px"}}
+                style={{ margin: "15px 0px" }}
                 multiple
                 id="tags-outlined"
-                options={top100Films}
-                getOptionLabel={(option) => option.title}
+                onChange={(e, value) => setSelectedRoles(value.map(e=>e.code))}
+                options={roles}
+                getOptionLabel={(option) => option.name}
                 filterSelectedOptions
                 renderInput={(params) => (
                   <TextField
                     {...params}
                     variant="outlined"
                     label="Role"
-                    placeholder="Favorites"
+                    placeholder="Choose roles"
                   />
                 )}
               />
+              <div className="modal-footer">
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  data-dismiss="modal"
+                  onClick={handleClose}
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
-          </div>
-          <div className="modal-footer">
-            <button type="button" className="btn btn-primary">
-              Submit
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-dismiss="modal"
-              onClick={handleClose}
-            >
-              Cancel
-            </button>
           </div>
         </div>
       </div>
@@ -84,4 +108,4 @@ function AddUserModal({ handleClose, status }) {
   );
 }
 
-export default AddUserModal;
+export default AddAdminModal;

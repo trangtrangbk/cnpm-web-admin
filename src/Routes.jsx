@@ -22,21 +22,11 @@ export default class Routes extends Component {
     const { token } = this.state;
     let content = (
       <Switch>
-        {/* { !token && <Redirect exact from="" to="/login" /> } */}
         <Route
           exact
           path="/login"
           render={() => <Login onLoggedIn={this.onLoggedInHandlder} />}
         />
-        {/* <Route
-          component={ForgotPassword}
-          exact
-          path="/forgot-password"
-        />
-        <Route
-          component={ResetPassword}
-          path="/reset/:token"
-        /> */}
         <Redirect
           exact
           from="/"

@@ -22,7 +22,8 @@ import blockIcon from "./block.svg";
 import { getInitials } from "../../../../../helpers";
 import { useSelector, useDispatch } from "react-redux";
 import request from "../../../../../request";
-
+import * as types from "../../../../../redux/constants";
+import actions from "../../../../../redux/actions";
 const useStyles = makeStyles((theme) => ({
   root: {},
   content: {
@@ -68,10 +69,8 @@ const AdminTable = (props) => {
   };
   const permissions = useSelector((store) => store.permission.permissions);
   const getPermissionName = (code) => {
-    console.log(permissions);
     const permission =
       permissions.find((permission) => permission.code == code) || [];
-    console.log(permission);
     return permission.name;
   };
   return (
@@ -82,7 +81,7 @@ const AdminTable = (props) => {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Usename</TableCell>
+                  <TableCell>Name</TableCell>
                   <TableCell>Email</TableCell>
                   <TableCell>Role</TableCell>
                   <TableCell>Status</TableCell>
@@ -92,7 +91,13 @@ const AdminTable = (props) => {
               <TableBody>
                 {admins.slice(0, rowsPerPage).map((admin) => (
                   <TableRow className={classes.tableRow} hover key={admin._id}>
-                    <TableCell>
+                    <TableCell
+                    style={{cursor : "pointer"}}
+                    onClick={() => {
+                      dispatch(actions.handleAdmin(types.SET_SELECTED_ADMIN, admin));
+                      dispatch(actions.openModal(types.OPEN_MODAL_EDIT_ADMIN));
+                    }}
+                    >
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
@@ -100,13 +105,11 @@ const AdminTable = (props) => {
                         >
                           {getInitials(admin.name)}
                         </Avatar>
-                        <Typography variant="body1">
-                          {admin.name}
-                        </Typography>
+                        <Typography variant="body1">{admin.name}</Typography>
                       </div>
                     </TableCell>
                     <TableCell>{admin.email}</TableCell>
-                    <TableCell style ={{width : "30%"}}>
+                    <TableCell style={{ width: "30%" }}>
                       {admin.role.map((r) => (
                         <span className="permission">
                           {getPermissionName(r)}
