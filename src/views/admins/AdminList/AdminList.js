@@ -23,12 +23,15 @@ const AdminList = () => {
   const dispatch = useDispatch();
   const { addAdmin, editAdmin } = useSelector((store) => store.modal);
   const [listAdmins, setListAdmins] = useState([]);
+  const [isLoading , setIsLoading] = useState(false);
   const fetchListAdmins = () => {
+    setIsLoading(true)
     request()
       .get("/admin/accounts/listAdmins")
       .then((res) => {
         console.log(res);
         setListAdmins(res.data);
+        setIsLoading(false);
       });
   };
   const permissions = useSelector((store) => store.permission.permissions);
@@ -48,6 +51,7 @@ const AdminList = () => {
   return (
     <div className={classes.root}>
       <AddAdminModal
+        fetchList = {()=>fetchListAdmins()}
         roles={permissions}
         handleClose={() => dispatch(closeModal(types.CLOSE_MODAL_ADD_ADMIN))}
         status={addAdmin}
@@ -59,10 +63,10 @@ const AdminList = () => {
       />
       <AdminToolbar />
       <div className={classes.content}>
-        {listAdmins.length >0 ? (
+        {!isLoading? (
           <AdminTable
             admins={listAdmins}
-            fetchList={() => fetchListAdmins()}
+            updateList = {(list) => setListAdmins(list)}
             permissions={permissions}
           />
         ) : (

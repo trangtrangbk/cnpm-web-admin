@@ -34,34 +34,56 @@ function AddUserModal({ handleClose, status, news }) {
             </button>
           </div>
           <div className="modal-body">
-            <div className="new-info">
-              <h3 style={{ fontStyle: "italic" }}>
+            <div className="new-info" style={{ textAlign: "center" }}>
+              <span style={{ fontStyle: "italic" }}>
                 Ngày đăng:{" "}
                 {moment(news.createDay).format("DD/MM/YYYY hh:mm:ss")}
-              </h3>
+              </span>
               <br />
-              <h3 style={{ fontStyle: "italic", marginBottom: "20px" }}>
+              <span style={{ fontStyle: "italic", marginBottom: "20px" }}>
                 Người đăng: {news.user && news.user.name}
-              </h3>
-              <Carousel>
-                {news.picture &&
-                  news.picture.map((item) => <img src={item} width="900px" />)}
-              </Carousel>
-              <div>{news.description}</div>
-             <div style={{width : "50%"}}>
-             <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
-                <div>Diện tích: </div>
-                <div>{news.area} (m2)</div>
+              </span>
+              <div style={{ marginTop: "20px", textAlign: "center" }}>
+                <Carousel>
+                  {news.picture &&
+                    news.picture.map((item) => (
+                      <img src={item} width="600px" />
+                    ))}
+                </Carousel>
               </div>
-              <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
-                <div>Giá phòng:</div>
-                <div>{numeral(news.price).format("0,0")} vnd</div>
+              <div style={{ textAlign: "center" }}>{news.description}</div>
+              <div style={{ width: "50%", margin: "auto" }}>
+                <div
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                    margin: "20px 0",
+                  }}
+                >
+                  <div>Diện tích: </div>
+                  <div>{news.area} (m2)</div>
+                </div>
+                <div
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                    margin: "20px 0",
+                  }}
+                >
+                  <div>Giá phòng:</div>
+                  <div>{numeral(news.price).format("0,0")} vnd</div>
+                </div>
+                <div
+                  style={{
+                    justifyContent: "space-between",
+                    display: "flex",
+                    margin: "20px 0",
+                  }}
+                >
+                  <div>Liên hệ:</div>
+                  <div>{news.phone}</div>
+                </div>
               </div>
-              <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
-                <div>Liên hệ:</div>
-                <div>{news.phone}</div>
-              </div>
-             </div>
             </div>
           </div>
         </div>

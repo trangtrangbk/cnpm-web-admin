@@ -28,7 +28,6 @@ export default class Routes extends Component {
           render={() => <Login onLoggedIn={this.onLoggedInHandlder} />}
         />
         <Redirect
-          exact
           from="/"
           to="/login"
         />

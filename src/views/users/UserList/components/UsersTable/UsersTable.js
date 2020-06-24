@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -50,19 +50,30 @@ const UsersTable = props => {
 
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false);
   const handlePageChange = (event, page) => {
     setPage(page);
   };
+  useEffect(()=>{
+    if(isLoading) document.body.style.cursor = 'progress';
+    else document.body.style.cursor = 'default';
+  },[isLoading])
 
   const handleRowsPerPageChange = event => {
     setRowsPerPage(event.target.value);
   };
   const handleChangeStatus = (user) => {
+    setIsLoading(true)
     request()
       .patch(`/admin/accounts/changeStatusUser/${user._id}`, { status: !user.status })
       .then((res) => {
-        props.fetchList();
+        setIsLoading(false)
+        const list = [...users]
+        const indexUpdated = list.findIndex(item => item._id === user._id)
+        const updatedUser = list.find(item => item._id === user._id)
+        updatedUser.status = !updatedUser.status
+        list[indexUpdated] = updatedUser
+        props.updateList(list)
       });
   };
 
@@ -82,23 +93,22 @@ const UsersTable = props => {
                   <TableCell>Status</TableCell>
                   <TableCell>Address</TableCell>
                   <TableCell>Phone</TableCell>
-                  <TableCell>Birthday</TableCell>
                   <TableCell>Created Day</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
-                users.slice(0, rowsPerPage).map(user => (
+                users.slice(0, rowsPerPage).map(user =>
                   <TableRow
                     className={classes.tableRow}
                     hover
-                    key={user.id}
+                    key={user._id}
                   >
                     <TableCell>
                       <div className={classes.nameContainer}>
                         <Avatar
                           className={classes.avatar}
-                          src={user.avatarUrl}
+                          src={user.user && user.user.avatar}
                         >
                           {getInitials(user.name)}
                         </Avatar>
@@ -108,23 +118,20 @@ const UsersTable = props => {
                     <TableCell>{user.email}</TableCell>
                     <TableCell onClick={() => handleChangeStatus(user)}>
                       {user.status ? (
-                        <img src={displayIcon} width="20px" height="20px" />
+                        <img style={{cursor : isLoading?"progress":"pointer"}}  src={displayIcon} width="20px" height="20px" />
                       ) : (
-                        <img src={blockIcon} width="20px" height="20px" />
+                        <img style={{cursor : isLoading?"progress":"pointer"}}  src={blockIcon} width="20px" height="20px" />
                       )}
                     </TableCell>
                     <TableCell>
-                      {user.address}
+                      {user.user && user.user.address}
                     </TableCell>
-                    <TableCell>{user.phone}</TableCell>
-                    <TableCell>
-                      {moment(user.birthday).format('DD/MM/YYYY')}
-                    </TableCell>
+                    <TableCell>{user.user && user.user.phoneNumber}</TableCell>
                     <TableCell>
                       {moment(user.createdDay).format('DD/MM/YYYY hh:mm:ss')}
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </div>

@@ -27,6 +27,7 @@ const UserList = () => {
         setListUsers(res.data);
       });
   };
+
   useEffect(() => {
     fetchListUsers();
   }, []);
@@ -35,7 +36,7 @@ const UserList = () => {
       <UsersToolbar />
       <div className={classes.content}>
         {listUsers.length > 0 ? (
-          <UsersTable users={listUsers} fetchList={() => fetchListUsers()} />
+          <UsersTable users={listUsers} updateList = {(list)=>setListUsers(list)} />
         ) : (
           <div style={{textAlign : "center"}}>
           <CircularProgress />

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import moment from "moment";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles, CircularProgress } from "@material-ui/core";
 import displayIcon from "./correct.svg";
 import blockIcon from "./block.svg";
 import {
@@ -51,20 +51,32 @@ const NewsTable = (props) => {
   const dispatch = useDispatch();
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
-
+  const [isLoading, setIsLoading] = useState(false)
   const handlePageChange = (event, page) => {
     setPage(page);
   };
+
+  useEffect(()=>{
+    if(isLoading) document.body.style.cursor = 'progress';
+    else document.body.style.cursor = 'default';
+  },[isLoading])
 
   const handleRowsPerPageChange = (event) => {
     setRowsPerPage(event.target.value);
   };
 
   const handleChangeStatus = (news) => {
+    setIsLoading(true)
     request()
       .patch(`/admin/news/${news._id}`, { status: !news.status })
       .then((res) => {
-        props.fetchList();
+        const list = [...listNews]
+        const indexUpdated = list.findIndex(item => item._id === news._id)
+        const updatedNews = list.find(item => item._id === news._id)
+        updatedNews.status = !updatedNews.status
+        list[indexUpdated] = updatedNews
+        props.updateList(list)
+        setIsLoading(false)
       });
   };
 
@@ -89,13 +101,12 @@ const NewsTable = (props) => {
                 {listNews.slice(0, rowsPerPage).map((news) => (
                   <TableRow className={classes.tableRow} hover key={news._id}>
                     <TableCell
-                      style={{ cursor: "pointer" }}
                       onClick={() => {
                         dispatch(handleNews(types.SET_SELECTED_NEWS, news));
                         dispatch(openModal(types.OPEN_MODEL_VIEW_NEWS));
                       }}
                     >
-                      <img src= {news.picture[0]} width = "200px" height ="auto"/>
+                      <img  style={{ cursor: "pointer" }} src= {news.picture[0]} width = "200px" height ="auto"/>
                     </TableCell>
                     <TableCell
                       style={{ cursor: "pointer" }}
@@ -108,17 +119,18 @@ const NewsTable = (props) => {
                     </TableCell>
                     <TableCell>
                       <div className={classes.nameContainer}>
-                        <Avatar className={classes.avatar} src={news.avatarUrl}>
+                        <Avatar className={classes.avatar} src={news.user.avatar}>
                           {getInitials(news.user.name)}
                         </Avatar>
                         <Typography variant="body1">{news.user.name}</Typography>
                       </div>
                     </TableCell>
-                    <TableCell style={{cursor : "pointer"}} onClick={() => handleChangeStatus(news)}>
-                      {news.status ? (
-                        <img src={displayIcon} width="20px" height="20px" />
+                    <TableCell onClick={() => handleChangeStatus(news)}>
+                      {
+                      news.status ? (
+                        <img  style={{cursor : isLoading?"progress":"pointer"}} src={displayIcon} width="20px" height="20px" />
                       ) : (
-                        <img src={blockIcon} width="20px" height="20px" />
+                        <img  style={{cursor : isLoading?"progress":"pointer"}} src={blockIcon} width="20px" height="20px" />
                       )}
                     </TableCell>
 

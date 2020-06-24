@@ -51,6 +51,12 @@ const AdminTable = (props) => {
   const dispatch = useDispatch();
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(()=>{
+    if(isLoading) document.body.style.cursor = 'progress';
+    else document.body.style.cursor = 'default';
+  },[isLoading])
 
   const handlePageChange = (event, page) => {
     setPage(page);
@@ -60,10 +66,17 @@ const AdminTable = (props) => {
     setRowsPerPage(event.target.value);
   };
   const handleChangeStatus = (admin) => {
+    setIsLoading(true)
     request()
       .patch(`/admin/accounts/changeStatusAdmin/${admin._id}`, { status: !admin.status })
       .then((res) => {
-        props.fetchList();
+        setIsLoading(false)
+        const list = [...admins]
+        const indexUpdated = list.findIndex(item => item._id === admin._id)
+        const updatedAdmin = list.find(item => item._id === admin._id)
+        updatedAdmin.status = !updatedAdmin.status
+        list[indexUpdated] = updatedAdmin
+        props.updateList(list)
       });
   };
   const permissions = useSelector((store) => store.permission.permissions);
@@ -117,9 +130,9 @@ const AdminTable = (props) => {
                     </TableCell>
                     <TableCell onClick={() => handleChangeStatus(admin)}>
                       {admin.status ? (
-                        <img src={displayIcon} width="20px" height="20px" />
+                        <img style={{cursor : isLoading?"progress":"pointer"}} src={displayIcon} width="20px" height="20px" />
                       ) : (
-                        <img src={blockIcon} width="20px" height="20px" />
+                        <img style={{cursor : isLoading?"progress":"pointer"}}  src={blockIcon} width="20px" height="20px" />
                       )}
                     </TableCell>
                     <TableCell>

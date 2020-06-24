@@ -7,7 +7,7 @@ import actions from "../../../redux/actions"
 import { useDispatch } from "react-redux";
 import * as types from "../../../redux/constants"
 
-function AddAdminModal({ handleClose, status, roles }) {
+function AddAdminModal({ handleClose, status, roles, fetchList}) {
 
   const dispatch = useDispatch();
 
@@ -26,6 +26,7 @@ function AddAdminModal({ handleClose, status, roles }) {
       name: username,
       "role" : selectedRoles
     }).then(res =>{
+      fetchList()
       dispatch(actions.closeModal(types.CLOSE_MODAL_ADD_ADMIN))
       setIsSending(true)
     })

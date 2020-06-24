@@ -45,7 +45,7 @@ const NewsList = () => {
       <NewsToolbar />
       {listNews.length > 0 ? (
         <div className={classes.content}>
-          <NewsTable listNews={listNews} fetchList={() => fetchListNews()} />
+          <NewsTable listNews={listNews} updateList = {(list)=>setListNews(list)} />
         </div>
       ) : (
         <div style={{textAlign : "center"}}>
