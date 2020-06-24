@@ -61,7 +61,7 @@ const AdminTable = (props) => {
   };
   const handleChangeStatus = (admin) => {
     request()
-      .patch(`/admin/accounts/changestatusaccountuser/${admin._id}`, { status: !admin.status })
+      .patch(`/admin/accounts/changeStatusAdmin/${admin._id}`, { status: !admin.status })
       .then((res) => {
         props.fetchList();
       });

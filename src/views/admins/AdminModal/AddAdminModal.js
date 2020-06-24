@@ -1,25 +1,36 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Modal, TextField } from "@material-ui/core";
+import { Modal, TextField, Button } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import "../../../assets/modal.css";
 import request from "../../../request";
+import actions from "../../../redux/actions"
+import { useDispatch } from "react-redux";
+import * as types from "../../../redux/constants"
 
 function AddAdminModal({ handleClose, status, roles }) {
+
+  const dispatch = useDispatch();
+
   const [username,setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [selectedRoles, setSelectedRoles] = useState([]);
+  const [isSending, setIsSending] = useState(false);
   const handleAddAdmin = e=>{
     e.preventDefault();
+    setIsSending(true)
     request().post("/register",{
       email,
       password,
       isAdmin : true,
       name: username,
       "role" : selectedRoles
+    }).then(res =>{
+      dispatch(actions.closeModal(types.CLOSE_MODAL_ADD_ADMIN))
+      setIsSending(true)
     })
+    .catch(err =>console.log(err))
   }
-
 
   return (
     <Modal
@@ -47,7 +58,7 @@ function AddAdminModal({ handleClose, status, roles }) {
             <form onSubmit={handleAddAdmin}>
               <TextField
                 id="outlined-basic"
-                label="usename"
+                label="name"
                 variant="outlined"
                 fullWidth
                 margin="dense"
@@ -88,9 +99,6 @@ function AddAdminModal({ handleClose, status, roles }) {
                 )}
               />
               <div className="modal-footer">
-                <button type="submit" className="btn btn-primary">
-                  Submit
-                </button>
                 <button
                   type="button"
                   className="btn btn-secondary"
@@ -99,6 +107,9 @@ function AddAdminModal({ handleClose, status, roles }) {
                 >
                   Cancel
                 </button>
+                <Button type="submit" disabled={isSending} className="btn btn-primary">
+                  Submit
+                </Button>
               </div>
             </form>
           </div>

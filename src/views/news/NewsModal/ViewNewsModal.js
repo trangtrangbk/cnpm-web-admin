@@ -3,7 +3,7 @@ import { Modal } from "@material-ui/core";
 import "../../../assets/modal.css";
 import moment from "moment";
 import Carousel from "react-material-ui-carousel";
-import numeral from 'numeral'
+import numeral from "numeral";
 
 function AddUserModal({ handleClose, status, news }) {
   console.log(news);
@@ -17,7 +17,7 @@ function AddUserModal({ handleClose, status, news }) {
       <div
         className="modal-dialog"
         role="document"
-        style={{ maxWidth: "1000px",overflow : "auto", maxHeight : "900px" }}
+        style={{ maxWidth: "1000px", overflow: "auto", maxHeight: "900px" }}
       >
         <div className="modal-content">
           <div className="modal-header">
@@ -35,29 +35,33 @@ function AddUserModal({ handleClose, status, news }) {
           </div>
           <div className="modal-body">
             <div className="new-info">
-              <h3 style={{fontStyle : "italic"}}>
-              Ngày đăng:  {moment(news.createDay).format("DD/MM/YYYY hh:mm:ss")}
+              <h3 style={{ fontStyle: "italic" }}>
+                Ngày đăng:{" "}
+                {moment(news.createDay).format("DD/MM/YYYY hh:mm:ss")}
               </h3>
               <br />
-             <h3 style={{fontStyle : "italic", marginBottom: "20px"}}>
-             Người đăng: {news.user && news.user.name}</h3>
+              <h3 style={{ fontStyle: "italic", marginBottom: "20px" }}>
+                Người đăng: {news.user && news.user.name}
+              </h3>
               <Carousel>
-                {news.picture && news.picture.map((item) => (
-                  <img src= {item} width = "900px"/>
-                ))}
+                {news.picture &&
+                  news.picture.map((item) => <img src={item} width="900px" />)}
               </Carousel>
-              <div>
-                {news.description}
+              <div>{news.description}</div>
+             <div style={{width : "50%"}}>
+             <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
+                <div>Diện tích: </div>
+                <div>{news.area} (m2)</div>
               </div>
-              <div>
-                Diện tích: {news.area} (m2)
+              <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
+                <div>Giá phòng:</div>
+                <div>{numeral(news.price).format("0,0")} vnd</div>
               </div>
-              <div>
-                Giá phòng: {numeral(news.price).format('0,0')} vnd
+              <div style={{justifyContent: "space-between",display : "flex", margin : "20px 0"}}>
+                <div>Liên hệ:</div>
+                <div>{news.phone}</div>
               </div>
-              <div>
-                Liên hệ: {news.phone}
-              </div>
+             </div>
             </div>
           </div>
         </div>

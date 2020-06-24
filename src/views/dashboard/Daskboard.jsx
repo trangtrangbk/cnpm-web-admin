@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles, MenuItem } from "@material-ui/core";
 import PeopleIcon from "@material-ui/icons/PeopleOutlined";
-import { Card, CardContent, Grid, Typography, Avatar,FormControl, InputLabel, Select } from "@material-ui/core";
+import LibraryBooksIcon from "@material-ui/icons/LibraryBooks";
+import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
+import {
+  Card,
+  CardContent,
+  Grid,
+  Typography,
+  Avatar,
+  FormControl,
+  InputLabel,
+  Select,
+} from "@material-ui/core";
 import request from "../../request";
 import DataChart from "react-apexcharts";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -110,11 +122,15 @@ const Dashboard = () => {
                   >
                     TOTAL NEWS
                   </Typography>
-                  <Typography variant="h3">{totalData.totalNews}</Typography>
+                  {totalData.totalNews ? (
+                    <Typography variant="h3">{totalData.totalNews}</Typography>
+                  ) : (
+                    <CircularProgress />
+                  )}
                 </Grid>
                 <Grid item>
                   <Avatar className={classes.avatar}>
-                    <PeopleIcon className={classes.icon} />
+                    <LibraryBooksIcon className={classes.icon} />
                   </Avatar>
                 </Grid>
               </Grid>
@@ -134,7 +150,11 @@ const Dashboard = () => {
                   >
                     TOTAL USER
                   </Typography>
-                  <Typography variant="h3">{totalData.totalUser}</Typography>
+                  {totalData.totalUser ? (
+                    <Typography variant="h3">{totalData.totalUser}</Typography>
+                  ) : (
+                    <CircularProgress />
+                  )}
                 </Grid>
                 <Grid item>
                   <Avatar className={classes.avatar}>
@@ -158,11 +178,15 @@ const Dashboard = () => {
                   >
                     TOTAL ADMIN
                   </Typography>
-                  <Typography variant="h3">{totalData.totalAdmin}</Typography>
+                  {totalData.totalAdmin ? (
+                    <Typography variant="h3">{totalData.totalAdmin}</Typography>
+                  ) : (
+                    <CircularProgress />
+                  )}
                 </Grid>
                 <Grid item>
                   <Avatar className={classes.avatar}>
-                    <PeopleIcon className={classes.icon} />
+                    <PermContactCalendarIcon className={classes.icon} />
                   </Avatar>
                 </Grid>
               </Grid>
@@ -171,27 +195,24 @@ const Dashboard = () => {
         </Grid>
       </Grid>
       <Grid container spacing={4}>
-      <Grid item lg={2} sm={2} xl={2} xs={2}>
-      <FormControl className={classes.formControl}>
-        <InputLabel id="demo-simple-select-label">Năm</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={year}
-          onChange={(e)=>setYear(e.target.value)}
-        >
-          {
-            chartData.map(data =>
-              (
-              <MenuItem value={data.year}>{data.year}</MenuItem>
-              ))
-          }
-        </Select>
-      </FormControl>
-      </Grid>
-      <Grid item lg={9} sm={9} xl={9} xs={12}>
-      <DataChart options={option} series={series} type="area" width="80%" />
-      </Grid>
+        <Grid item lg={2} sm={2} xl={2} xs={2}>
+          <FormControl className={classes.formControl}>
+            <InputLabel id="demo-simple-select-label">Year</InputLabel>
+            <Select
+              labelId="demo-simple-select-label"
+              id="demo-simple-select"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+            >
+              {chartData.map((data) => (
+                <MenuItem value={data.year}>{data.year}</MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item lg={9} sm={9} xl={9} xs={12}>
+          <DataChart options={option} series={series} type="area" width="80%" />
+        </Grid>
       </Grid>
     </div>
   );
