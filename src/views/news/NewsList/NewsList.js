@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core";
-import { NewsTable, NewsToolbar } from "./components";
+import { NewsTable } from "./components";
 import { useDispatch, useSelector } from "react-redux";
 import request from "../../../request";
 import ViewNewsModal from "../NewsModal/ViewNewsModal";
@@ -42,7 +42,6 @@ const NewsList = () => {
         status={isOpenViewNewsModal}
         news={news}
       />
-      <NewsToolbar />
       {listNews.length > 0 ? (
         <div className={classes.content}>
           <NewsTable listNews={listNews} updateList = {(list)=>setListNews(list)} />

@@ -29,7 +29,7 @@ import Avatar from "@material-ui/core/Avatar";
 import history from "../history";
 import "../assets/index.css";
 import InputIcon from "@material-ui/icons/Input";
-
+import ForbiddenPage from "./error/403Page";
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -64,16 +64,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const adminInfor = JSON.parse(localStorage.getItem("user"))
+
 const switchRoutes = (
   <Switch>
     <Redirect exact from="/" to="/dashboard" />
     <Redirect exact from="/login" to="/dashboard" />
-    <Route component={Dashboard} exact path="/dashboard" />
-    <Route component={News} exact path="/news" />
-    <Route component={UserList} exact path="/users" />
-    <Route component={AdminList} exact path="/admins" />
+    <Route component={adminInfor?adminInfor.role.some(r=> [1,4].indexOf(r) >= 0) ? Dashboard : ForbiddenPage:null} exact path="/dashboard" />
+    <Route component={adminInfor?adminInfor.role.some(r=> [2,4].indexOf(r) >= 0) ? News : ForbiddenPage:null} exact path="/news" />
+    <Route component={adminInfor?adminInfor.role.some(r=> [3,4].indexOf(r) >= 0) ? UserList : ForbiddenPage:null} exact path="/users" />
+    <Route component={adminInfor?adminInfor.role.some(r=> [4].indexOf(r) >= 0) ? AdminList : ForbiddenPage:null} exact path="/admins" />
     <Route component={Account} exact path="/profile" />
-    <Route component={Permissons} exact path="/roles" />
+    <Route component={adminInfor?adminInfor.role.some(r=> [4].indexOf(r) >= 0) ? Permissons : ForbiddenPage:null} exact path="/roles" />
     {/* <Redirect from="/" to="/not-found" /> */}
   </Switch>
 );
@@ -87,7 +89,7 @@ function Index(props) {
 
   const handleSignOut = ()=>{
     localStorage.clear();
-    window.location.href = "/login"
+    window.location.href = "/login";
   }
 
   const drawer = (
@@ -100,54 +102,54 @@ function Index(props) {
             style={{ width: "70px", height: "70px" }}
           />
         </div>
-        <div style={{ textAlign: "center" }}>Administrator</div>
+        <div style={{ textAlign: "center" }}>{adminInfor.email}</div>
       </div>
       <Divider />
       <List>
-        <ListItem button key="dashboard" style={{ padding: "0px" }}>
+        { adminInfor.role.some(r=> [1,4].indexOf(r) >= 0) && <ListItem button key="dashboard" style={{ padding: "0px" }}>
           <NavLink to="/dashboard" className="sidebar_item">
             <ListItemIcon>
               <DashboardIcon />
             </ListItemIcon>
             <ListItemText primary="Dashboard" />
           </NavLink>
-        </ListItem>
+        </ListItem>}
 
-        <ListItem button key="news" style={{ padding: "0px" }}>
+        { adminInfor.role.some(r=> [2,4].indexOf(r) >= 0)  &&<ListItem button key="news" style={{ padding: "0px" }}>
           <NavLink to="/news" className="sidebar_item">
             <ListItemIcon>
               <WebAssetIcon />
             </ListItemIcon>
             <ListItemText primary="News" />
           </NavLink>
-        </ListItem>
+        </ListItem>}
 
-        <ListItem button key="user" style={{ padding: "0px" }}>
+        { adminInfor.role.some(r=> [3,4].indexOf(r) >= 0) && <ListItem button key="user" style={{ padding: "0px" }}>
           <NavLink to="/users" className="sidebar_item">
             <ListItemIcon>
               <SupervisorAccountIcon />
             </ListItemIcon>
             <ListItemText primary="User" />
           </NavLink>
-        </ListItem>
+        </ListItem>}
 
-        <ListItem button key="admin" style={{ padding: "0px" }}>
+        { adminInfor.role.some(r=> [4].indexOf(r) >= 0) && <ListItem button key="admin" style={{ padding: "0px" }}>
           <NavLink to="/admins" className="sidebar_item">
             <ListItemIcon>
               <SupervisedUserCircleIcon />
             </ListItemIcon>
             <ListItemText primary="Admin" />
           </NavLink>
-        </ListItem>
+        </ListItem>}
 
-        <ListItem button key="role" style={{ padding: "0px" }}>
+        { adminInfor.role.some(r=> [4].indexOf(r) >= 0) &&<ListItem button key="role" style={{ padding: "0px" }}>
           <NavLink to="/roles" className="sidebar_item">
             <ListItemIcon>
               <GavelIcon />
             </ListItemIcon>
             <ListItemText primary="Permissons" />
           </NavLink>
-        </ListItem>
+        </ListItem>}
       </List>
     </div>
   );
@@ -169,7 +171,7 @@ function Index(props) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Welcome, Admin
+            Welcome, {adminInfor.name}
           </Typography>
           <IconButton className={classes.signOutButton} color="inherit" onClick={()=>handleSignOut()}>
             <InputIcon />

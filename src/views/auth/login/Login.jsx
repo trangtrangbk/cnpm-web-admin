@@ -1,6 +1,6 @@
 import React, { useReducer, useEffect } from 'react';
 import {Avatar, Button, CssBaseline, TextField, Link, Grid,
-    Typography, makeStyles, Container} from '@material-ui/core';
+    Typography, makeStyles, Container, Checkbox} from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import request from "../../../request";
 import history from "../../../history";
@@ -40,8 +40,10 @@ export default function SignIn() {
   const initState = {
       email : "",
       password : "",
-      err : ""
+      err : "",
+      checked : false
   }
+
   const [state, setState] = useReducer(
     (prestate, newState) => ({ ...prestate, ...newState }),initState
   );
@@ -51,10 +53,13 @@ export default function SignIn() {
     request().post("/loginAdmin",
     {
       email : state.email,
-      password : state.password
+      password : state.password,
+      remember : state.checked
     }
   ).then(res=>{
     localStorage.setItem("token", res.data.token)
+    localStorage.setItem("user", JSON.stringify(res.data))
+
     window.location.href = "/dashboard"
   }).catch(err =>{
     console.log(err)
@@ -111,9 +116,13 @@ export default function SignIn() {
           </Button>
           <Grid container>
             <Grid item xs className={classes.right_side}>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+            <Checkbox
+        checked={state.checked}
+        onChange={e=> setState({...state,checked:e.target.checked})}
+        inputProps={{ 'aria-label': 'primary checkbox' }}
+      />
+                Remember me?
+
             </Grid>
           </Grid>
         </form>
