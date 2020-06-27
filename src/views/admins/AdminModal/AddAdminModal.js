@@ -32,7 +32,7 @@ function AddAdminModal({ handleClose, status, roles, fetchList}) {
       setIsSending(false)
     })
     .catch(err =>{
-      setErr("Email đã được đăng kí tài khoản khác!");
+      setErr("Something went wrong! Please try it later");
       setIsSending(false)
     })
   }
