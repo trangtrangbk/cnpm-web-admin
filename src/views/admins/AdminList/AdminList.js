@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, CircularProgress } from "@material-ui/core";
+import { makeStyles, CircularProgress,Button } from "@material-ui/core";
 import { SearchInput } from '../../../components';
 
 import {  AdminTable } from "./components";
@@ -9,6 +9,7 @@ import { closeModal } from "../../../redux/actions/index";
 import * as types from "../../../redux/constants";
 import request from "../../../request";
 import EditAdminModal from "../AdminModal/EditAdminModal";
+import { openModal } from "../../../redux/actions/index";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,7 +77,7 @@ const AdminList = () => {
         handleClose={() => dispatch(closeModal(types.CLOSE_MODAL_ADD_ADMIN))}
         status={editAdmin}
       />
-      <div className={classes.row} style={{paddingTop : "60px", paddingBottom : "30px"}}>
+      <div className={classes.row} style={{paddingTop : "60px", paddingBottom : "30px", display : "flex", justifyContent:"space-between"}}>
         <SearchInput
           className={classes.searchInput}
           placeholder="Search admin"
@@ -88,12 +89,23 @@ const AdminList = () => {
             else setListFilter(list.filter(admin =>admin.name.includes(e.target.value) || admin.email.includes(e.target.value) ))
           }}
         />
+        <div className={classes.row}>
+        <span className={classes.spacer} />
+        <Button
+          color="primary"
+          variant="contained"
+          onClick = {()=>dispatch(openModal(types.OPEN_MODAL_ADD_ADMIN))}
+        >
+          Add
+        </Button>
+      </div>
       </div>
       <div className={classes.content}>
         {!isLoading? (
           <AdminTable
             admins={listFilter}
             updateList = {(list) => setListAdmins(list)}
+            fetchList = {()=>fetchListAdmins()}
             permissions={permissions}
           />
         ) : (

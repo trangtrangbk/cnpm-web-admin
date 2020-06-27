@@ -79,7 +79,7 @@ const NewsTable = (props) => {
         setIsLoading(false)
       });
   };
-
+console.log(listNews)
   return (
     <Card {...rest} className={clsx(classes.root, className)}>
       <CardContent className={classes.content}>
@@ -98,7 +98,7 @@ const NewsTable = (props) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {listNews.slice(0, rowsPerPage).map((news) => (
+                {listNews.slice(page*rowsPerPage, (page+1)*rowsPerPage).map((news) => (
                   <TableRow className={classes.tableRow} hover key={news._id}>
                     <TableCell
                       onClick={() => {
