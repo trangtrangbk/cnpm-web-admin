@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, InputLabel } from '@material-ui/core';
+import request from "../../../../request";
 import {
   Card,
   CardHeader,
@@ -10,54 +11,70 @@ import {
   Divider,
   Grid,
   Button,
-  TextField
+  TextField,
+  Select,
+  MenuItem,
+  CircularProgress
 } from '@material-ui/core';
+import PermContactCalendarIcon from "@material-ui/icons/PermContactCalendar";
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const AccountDetails = props => {
+const AccountDetails = (props)=> {
   const { className, ...rest } = props;
 
   const classes = useStyles();
 
-  const [values, setValues] = useState({
-    firstName: 'Shen',
-    lastName: 'Zhi',
-    email: 'shen.zhi@devias.io',
-    phone: '',
-    state: 'Alabama',
-    country: 'USA'
-  });
+  const [address, setAddress] = useState("");
+  const [name, setName]=useState("");
+  const[gender,setGender]=useState("");
+  const[phoneNumber, setPhoneNumber]=useState("");
+  const [isSending, setIsSending] = useState(true);
 
-  const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+  const [validate, setValidate] = useState({
+    phone: false,
+  })
+  const ChangeInfor = (e)=>{
+//   // coi cai addamin
+        e.preventDefault();
+        setIsSending(true)
+        request().put("/userinfo",{
+          address,
+          name,
+          gender,
+          phoneNumber
+        }).then(res =>{
+          setIsSending(false)
+        })
+        .catch(err =>console.log(err))
+ }
 
-  const states = [
-    {
-      value: 'alabama',
-      label: 'Alabama'
-    },
-    {
-      value: 'new-york',
-      label: 'New York'
-    },
-    {
-      value: 'san-francisco',
-      label: 'San Francisco'
-    }
-  ];
+  useEffect(()=>{
+  // get use inforx
+    const id= JSON.parse(localStorage.getItem('user')).id;
+    request().get(`/userinfo/${id}`).then(res=>{
+    console.log(res.data)
+    const data = res.data
+    setAddress(data.address)
+    setGender(data.gender)
+    setPhoneNumber(data.phoneNumber)
+    setIsSending(false)
+   })
+   request().get(`/accounts/getAccount/${id}`).then(res=>{
+     setName(res.data.name)
+     setIsSending(false)
+   })
+},[])
 
   return (
-    <Card
+    <div>
+{!isSending ?<Card
       {...rest}
       className={clsx(classes.root, className)}
     >
+
       <form
         autoComplete="off"
         noValidate
@@ -77,15 +94,15 @@ const AccountDetails = props => {
               md={6}
               xs={12}
             >
+
               <TextField
                 fullWidth
-                helperText="Please specify the first name"
-                label="First name"
+                label="Name"
                 margin="dense"
-                name="firstName"
-                onChange={handleChange}
+                name="Name"
+                onChange={(e)=>setName(e.target.value)}
                 required
-                value={values.firstName}
+                value={name}
                 variant="outlined"
               />
             </Grid>
@@ -96,31 +113,19 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Last name"
+                select
+                label="Gender"
                 margin="dense"
-                name="lastName"
-                onChange={handleChange}
+                name="gender"
+                onChange={(e)=>setGender(e.target.value)}
                 required
-                value={values.lastName}
+                value={gender}
                 variant="outlined"
-              />
-            </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Email Address"
-                margin="dense"
-                name="email"
-                onChange={handleChange}
-                required
-                value={values.email}
-                variant="outlined"
-              />
-            </Grid>
+              >
+                <MenuItem value={"true"}>Male</MenuItem>
+                <MenuItem value={"false"}>Female</MenuItem>
+              </TextField>
+           </Grid>
             <Grid
               item
               md={6}
@@ -131,10 +136,24 @@ const AccountDetails = props => {
                 label="Phone Number"
                 margin="dense"
                 name="phone"
-                onChange={handleChange}
+                onChange={(e)=>{
+                  setPhoneNumber(e.target.value);
+                  if(!isNaN(e.target.value) && e.target.value.length == 10){
+                    let v = validate;
+                    v.phone = false;
+                    setValidate({...v});
+                  }else{
+                    let v = validate;
+                    v.phone = true;
+                    setValidate({...v});
+                  }
+                }}
+                required
                 type="number"
-                value={values.phone}
+                value={phoneNumber}
                 variant="outlined"
+                error={validate.phone}
+                helperText={validate.phone?"Invalid format":""}
               />
             </Grid>
             <Grid
@@ -144,43 +163,17 @@ const AccountDetails = props => {
             >
               <TextField
                 fullWidth
-                label="Select State"
+                label="Address"
                 margin="dense"
-                name="state"
-                onChange={handleChange}
+                name="Address"
+                onChange={(e)=>setAddress(e.target.value)}
                 required
-                select
-                // eslint-disable-next-line react/jsx-sort-props
-                SelectProps={{ native: true }}
-                value={values.state}
+                value={address}
                 variant="outlined"
               >
-                {states.map(option => (
-                  <option
-                    key={option.value}
-                    value={option.value}
-                  >
-                    {option.label}
-                  </option>
-                ))}
               </TextField>
             </Grid>
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
-              <TextField
-                fullWidth
-                label="Country"
-                margin="dense"
-                name="country"
-                onChange={handleChange}
-                required
-                value={values.country}
-                variant="outlined"
-              />
-            </Grid>
+
           </Grid>
         </CardContent>
         <Divider />
@@ -188,17 +181,20 @@ const AccountDetails = props => {
           <Button
             color="primary"
             variant="contained"
+            onClick={ChangeInfor}
           >
             Save details
           </Button>
         </CardActions>
       </form>
-    </Card>
+    </Card>:(<div style={{textAlign : "center"}}>
+    <CircularProgress />
+    </div>)}
+    </div>
+
   );
 };
-
 AccountDetails.propTypes = {
   className: PropTypes.string
 };
-
-export default AccountDetails;
+export default AccountDetails

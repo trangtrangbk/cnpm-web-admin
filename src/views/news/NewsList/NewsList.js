@@ -36,14 +36,14 @@ const NewsList = () => {
   const isOpenViewNewsModal = useSelector((store) => store.modal.viewNews);
   const news = useSelector((store) => store.news.selectedNews);
   return (
-    <div className={classes.root}>
+    <div className={classes.root} style={{marginTop:"60px"}}>
       <ViewNewsModal
         handleClose={() => dispatch(closeModal(types.CLOSE_MODEL_VIEW_NEWS))}
         status={isOpenViewNewsModal}
         news={news}
       />
       {listNews.length > 0 ? (
-        <div className={classes.content}>
+        <div className={classes.content} >
           <NewsTable listNews={listNews} updateList = {(list)=>setListNews(list)} />
         </div>
       ) : (

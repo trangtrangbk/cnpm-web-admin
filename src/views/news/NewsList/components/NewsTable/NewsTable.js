@@ -3,7 +3,7 @@ import clsx from "clsx";
 import PropTypes from "prop-types";
 import moment from "moment";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { makeStyles, CircularProgress } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import displayIcon from "./correct.svg";
 import blockIcon from "./block.svg";
 import {

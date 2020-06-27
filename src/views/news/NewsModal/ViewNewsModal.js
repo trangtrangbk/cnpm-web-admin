@@ -1,12 +1,40 @@
-import React, { useEffect } from "react";
-import { Modal } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { Modal, Avatar, Typography } from "@material-ui/core";
 import "../../../assets/modal.css";
 import moment from "moment";
 import Carousel from "react-material-ui-carousel";
 import numeral from "numeral";
+import request from "../../../request";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { getInitials } from "../../../helpers";
 
-function AddUserModal({ handleClose, status, news }) {
+function ViewNewsModal({ handleClose, status, news }) {
   console.log(news);
+  const [listCmt, setListCmt] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (news._id) {
+      setIsLoading(true);
+      request()
+        .get(`/comment/${news._id}`)
+        .then((res) => {
+          console.log(res);
+          setListCmt(res.data);
+          setIsLoading(false);
+        })
+        .catch((err) => setIsLoading(false));
+    }
+  }, [news]);
+
+  const onRemoveCmt = (id) => {
+    request()
+      .delete(`/comment/${id}`)
+      .then((res) => {
+        setListCmt(listCmt.filter((cmt) => cmt._id != id));
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <Modal
       open={status}
@@ -85,6 +113,59 @@ function AddUserModal({ handleClose, status, news }) {
                 </div>
               </div>
             </div>
+            {listCmt.length !== 0 && (
+              <div className="comment">
+                {isLoading ? (
+                  <div style={{ textAlign: "center" }}>
+                    <CircularProgress />
+                  </div>
+                ) : (
+                  listCmt.map((cmt, index) => (
+                    <>
+                      <div
+                        style={{
+                          padding: "10px 0",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div style={{ display: "flex", alignItems: "center" }}>
+                          <Avatar
+                            src={cmt.avatar}
+                            style={{ marginRight: "7px" }}
+                          >
+                            {getInitials(cmt.nameWriter)}
+                          </Avatar>
+                          <Typography
+                            variant="body1"
+                            style={{ color: "#2673b7" }}
+                          >
+                            {cmt.nameWriter}
+                          </Typography>
+                          <div style={{ fontSize: "16px", marginLeft: "20px" }}>
+                            <span>{cmt.comment}</span>
+                          </div>
+                        </div>
+                        <span
+                          style={{
+                            fontSize: "20px",
+                            color: "#ccc",
+                            padding: "15px",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => onRemoveCmt(cmt._id)}
+                        >
+                          x
+                        </span>
+                      </div>
+                        <div
+                          style={{ height: "1px", backgroundColor: "#ccc" }}
+                        ></div>
+                    </>
+                  ))
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -92,4 +173,4 @@ function AddUserModal({ handleClose, status, news }) {
   );
 }
 
-export default AddUserModal;
+export default ViewNewsModal;
