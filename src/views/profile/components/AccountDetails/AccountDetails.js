@@ -31,15 +31,17 @@ const AccountDetails = (props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [oldpass, setOldPass] = useState("");
   const [newpass, setNewPass] = useState("");
-  const [isSending, setIsSending] = useState(true);
+  const [isSending, setIsSending] = useState(false);
+  const [isChangePass, setIsChangePass] = useState(false);
   const [messageSuccess, setMessageSuccess] = useState("");
+  const [isLoadingInfo, setIsLoadingInfo] = useState(true);
   const [messageError, setMessageError] = useState("");
   const [validate, setValidate] = useState({
     phone: false,
   });
-  const ChangeInfor = (e) => {
-    e.preventDefault();
-    if (address == "" || name == "" || gender == "" || phoneNumber == "") {
+  const ChangeInfor = () => {
+    if (address === "" || name === "" || gender === "" || phoneNumber === "") {
+      console.log(address, name, gender, phoneNumber);
       setMessageError("Need to enter enough information!");
       setMessageSuccess("");
     } else {
@@ -65,28 +67,28 @@ const AccountDetails = (props) => {
 
   const ChangePassword = () => {
     if (newpass !== "") {
-      setIsSending(true);
+      setIsChangePass(true);
       request()
         .patch("/accounts/changePassword", {
           oldpass,
           newpass,
         })
         .then((res) => {
-          setIsSending(false);
-          console.log("then");
+          setIsChangePass(false);
           setMessageSuccess("Password changed successfully");
           setMessageError("");
+          setOldPass("");
+          setNewPass("");
         })
         .catch((err) => {
-          console.log(err);
-          setIsSending(false);
-          console.log("catch");
+          setIsChangePass(false);
           setMessageError("Old Password not correct!");
           setMessageSuccess("");
         });
     }
   };
   console.log(messageError, messageSuccess);
+
   useEffect(() => {
     // get use infor
     const id = JSON.parse(localStorage.getItem("user")).id;
@@ -98,26 +100,26 @@ const AccountDetails = (props) => {
         setAddress(data.address);
         setGender(data.gender);
         setPhoneNumber(data.phoneNumber);
-        setIsSending(false);
+        setIsLoadingInfo(false);
       });
     request()
       .get(`/accounts/getAccount/${id}`)
       .then((res) => {
         setName(res.data.name);
-        setIsSending(false);
+        setIsLoadingInfo(false);
       });
   }, []);
 
   return (
     <div>
-      {!isSending ? (
-        <Card {...rest} className={clsx(classes.root, className)}>
-          <form autoComplete="off" noValidate>
+      <Card {...rest} className={clsx(classes.root, className)}>
+        {!isLoadingInfo ? (
+          <form>
             <CardHeader
               subheader="The information can be edited"
               title="Profile"
             />
-            <p style={{ color: "green" }}>{messageSuccess}</p>
+            <p style={{ color: "green", padding: "16px" }}>{messageSuccess}</p>
             <Divider />
             <CardContent>
               <Grid container spacing={3}>
@@ -191,14 +193,27 @@ const AccountDetails = (props) => {
                   ></TextField>
                 </Grid>
                 <Divider />
-                <CardActions style={{ width: "100%", display : "flex", justifyContent : "flex-end" }}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    onClick={() => ChangeInfor()}
-                  >
-                    Save profile
-                  </Button>
+
+                <CardActions
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  {!isSending ? (
+                    <Button
+                      color="primary"
+                      variant="contained"
+                      onClick={() => ChangeInfor()}
+                    >
+                      Save profile
+                    </Button>
+                  ) : (
+                    <div style={{ textAlign: "center" }}>
+                      <CircularProgress />
+                    </div>
+                  )}
                 </CardActions>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -208,6 +223,8 @@ const AccountDetails = (props) => {
                     name="oldpass"
                     onChange={(e) => setOldPass(e.target.value)}
                     required
+                    value={oldpass}
+                    type="password"
                     variant="outlined"
                   />
                 </Grid>
@@ -217,30 +234,45 @@ const AccountDetails = (props) => {
                     label="NewPassword"
                     margin="dense"
                     name="newpass"
+                    type="password"
+                    value={newpass}
                     onChange={(e) => setNewPass(e.target.value)}
                     required
                     variant="outlined"
                   />
                 </Grid>
-                <p style={{ color: "red" }}>{messageError}</p>
               </Grid>
             </CardContent>
-            <CardActions style={{ width: "100%", display : "flex", justifyContent : "flex-end" }}>
-              <Button
-                color="primary"
-                variant="contained"
-                onClick={() => ChangePassword()}
-              >
-                Save password
-              </Button>
+            <CardActions
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              {!isChangePass ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  onClick={() => ChangePassword()}
+                >
+                  Save password
+                </Button>
+              ) : (
+                <div style={{ textAlign: "center" }}>
+                  <CircularProgress />
+                </div>
+              )}
             </CardActions>
+
+            <p style={{ color: "red", padding: "16px" }}>{messageError}</p>
           </form>
-        </Card>
-      ) : (
-        <div style={{ textAlign: "center" }}>
-          <CircularProgress />
-        </div>
-      )}
+        ) : (
+          <div style={{ textAlign: "center" }}>
+            <CircularProgress />
+          </div>
+        )}
+      </Card>
     </div>
   );
 };

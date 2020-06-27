@@ -16,6 +16,7 @@ function AddAdminModal({ handleClose, status, roles, fetchList}) {
   const [email, setEmail] = useState("");
   const [selectedRoles, setSelectedRoles] = useState([]);
   const [isSending, setIsSending] = useState(false);
+  const [err, setErr] = useState("");
   const handleAddAdmin = e=>{
     e.preventDefault();
     setIsSending(true)
@@ -28,10 +29,14 @@ function AddAdminModal({ handleClose, status, roles, fetchList}) {
     }).then(res =>{
       fetchList()
       dispatch(actions.closeModal(types.CLOSE_MODAL_ADD_ADMIN))
-      setIsSending(true)
+      setIsSending(false)
     })
-    .catch(err =>console.log(err))
+    .catch(err =>{
+      setErr("Email đã được đăng kí tài khoản khác!");
+      setIsSending(false)
+    })
   }
+  console.log("add admin", isSending)
 
   return (
     <Modal
@@ -57,6 +62,7 @@ function AddAdminModal({ handleClose, status, roles, fetchList}) {
           </div>
           <div className="modal-body">
             <form onSubmit={handleAddAdmin}>
+              <p style={{color : "red", padding : "10px 0"}}>{err}</p>
               <TextField
                 id="outlined-basic"
                 label="name"

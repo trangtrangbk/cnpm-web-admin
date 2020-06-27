@@ -4,10 +4,18 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import "../../../assets/modal.css";
 import request from "../../../request";
 import { useSelector } from "react-redux";
+import actions from "../../../redux/actions"
+import { useDispatch } from "react-redux";
+import * as types from "../../../redux/constants"
 
-function EditAdminModal({ handleClose, status, roles }) {
+function EditAdminModal({ handleClose, status, roles,fetchList }) {
+
+  const dispatch = useDispatch();
+
+
   const [selectedRoles, setSelectedRoles] = useState([]);
   const admin = useSelector(store =>store.admin.selectedAdmin)
+  const [isSending, setIsSending] = useState(false);
   const [defaultRole,setDefaultRole] = useState([]);
   useEffect(()=>{
     let deRole = [];
@@ -18,14 +26,18 @@ function EditAdminModal({ handleClose, status, roles }) {
     }
     setDefaultRole(deRole)
   },[admin])
-  console.log(roles,admin,defaultRole)
+
   const handleEditAdmin = e=>{
     e.preventDefault();
-    request().patch(`/admin/accounts/${admin._id}`,{
+    setIsSending(true)
+    request().patch(`/admin/accounts/changeRole/${admin._id}`,{
       "role" : selectedRoles
-    })
+    }).then(res=>{
+      fetchList()
+      dispatch(actions.closeModal(types.CLOSE_MODAL_ADD_ADMIN))
+      setIsSending(true)
+    }).catch(err =>  setIsSending(false))
   }
-
 
   return (
     <Modal
@@ -88,7 +100,7 @@ function EditAdminModal({ handleClose, status, roles }) {
                 )}
               />
               <div className="modal-footer">
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" disabled={isSending} className="btn btn-primary">
                   Submit
                 </button>
                 <button

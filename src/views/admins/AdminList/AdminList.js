@@ -74,6 +74,7 @@ const AdminList = () => {
       />
       <EditAdminModal
         roles={permissions}
+        fetchList = {()=>fetchListAdmins()}
         handleClose={() => dispatch(closeModal(types.CLOSE_MODAL_ADD_ADMIN))}
         status={editAdmin}
       />
